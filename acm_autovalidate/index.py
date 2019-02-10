@@ -26,6 +26,7 @@ def handler(event, context):
     properties = event.get("ResourceProperties", {})
     if "domainname" not in properties:
         return responder(event, context, "FAILED", f"Missing parameter(s): {domainname}")
+    zone_id = properties["zoneid"]
     domainname = properties["domainname"].rstrip(".")
     domain = ".".join(domainname.split(".")[1:])
     additionalnames = [
@@ -33,11 +34,11 @@ def handler(event, context):
     ] if "additionalnames" in properties else None
 
     print(f"Checking if the domain exists and gather ZoneID for {domain}")
-    hosted_zones = route53_client.list_hosted_zones_by_name(DNSName = domain)["HostedZones"]
-    if len(hosted_zones) > 1:
-        return responder(event, context, "FAILED", "Domainname is not specific enough to determine the Hosted Zone ID") 
-    else:
-        zone_id = hosted_zones[0]["Id"]
+ #   hosted_zones = route53_client.list_hosted_zones_by_name(DNSName = domain)["HostedZones"]
+ #   if len(hosted_zones) > 1:
+ #       return responder(event, context, "FAILED", "Domainname is not specific enough to determine the Hosted Zone ID") 
+ #   else:
+ #       zone_id = hosted_zones[0]["Id"]
 
     if event["RequestType"] == "Delete":
         print("Delete Request received. Attempting to remove ACM and Route53 resources")

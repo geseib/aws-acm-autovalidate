@@ -22,6 +22,7 @@ Resources:
     Type: Custom::ACMAutoValidate
     Properties:
       ServiceToken: !ImportValue ACMAutoValidate
+      zoneid: RGF456TF23
       domainname: host.example.com
       additionalnames:
         - www.example.com
